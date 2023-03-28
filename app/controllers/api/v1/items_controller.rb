@@ -8,17 +8,14 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def create
-    merchant = Merchant.find(params[:merchant_id])
+    merchant = Merchant.find(params[:item][:merchant_id])
     render json: ItemSerializer.new(merchant.items.create!(item_params))
   end
 
   def update
     item = Item.find(params[:id])
-    if item.update(item_params)
-      render json: ItemSerializer.new(item)
-    else
-      raise ActiveRecord::RecordInvalid.new(item)
-    end
+    item.update!(item_params)
+    render json: ItemSerializer.new(item)
   end
 
   private

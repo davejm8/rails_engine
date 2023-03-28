@@ -94,25 +94,45 @@ describe "Items API" do
 
       item = JSON.parse(response.body, symbolize_names: true)[:data]
 
-      expect(item.name).to eq(item_params[:name])
-      expect(item.description).to eq(item_params[:description])
-      expect(item.unit_price).to eq(item_params[:unit_price])
-      expect(item.merchant_id).to eq(item_params[:merchant_id])
+      expect(Item.all.count).to eq(6)
+      expect(item[:attributes][:name]).to eq("soap")
+      expect(item[:attributes][:description]).to eq("washes you")
+      expect(item[:attributes][:unit_price]).to eq(2.5)
+      expect(item[:attributes][:merchant_id]).to eq(@merchant.id)
     end
   end
 
   describe 'update' do
     it 'can update an existing item' do
-      id = create(:item).id
-      previous_name = Item.last.name
-      item_params = { name: 'not soap' }
-      headers = {"CONTENT_TYPE" => "application/json"}
+      previous_item = create(:item, merchant_id: @merchant.id)
+      id = previous_item.id
+      update_params = { name: 'Updated Name' }
+      headers = { 'CONTENT_TYPE' => 'application/json' }
 
-      patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
+      patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate(item: update_params)
+      item = Item.find_by(id: id)
 
       expect(response).to be_successful
-      expect(item.name).to_not eq(previous_name)
-      expect(item.name).to eq('not soap')
+      
+      expect(item.name).to_not eq(previous_item.name)
+      expect(item.name).to eq('Updated Name')
+      expect(item.merchant_id).to eq(previous_item.merchant_id)
+    end
+
+    it 'can edit a different field' do
+      @merchant2 = create(:merchant)
+
+      previous_item = create(:item, merchant_id: @merchant.id)
+      id = previous_item.id
+      update_params = { description: 'Updated Description' }
+      headers = { 'CONTENT_TYPE' => 'application/json' }
+      
+      patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate(item: update_params)
+      item = Item.find_by(id: id)
+
+      expect(item.description).to_not eq(previous_item.description)
+      expect(item.description).to eq('Updated Description')
+      expect(item.merchant_id).to_not eq(@merchant2.id)
     end
   end
 end
