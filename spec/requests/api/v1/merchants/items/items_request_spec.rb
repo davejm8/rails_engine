@@ -3,10 +3,11 @@ require 'rails_helper'
 describe "Merchants Items API" do
   before :each do
     @merchant = create(:merchant)
-    @items = create_list(:item, 5, merchant_id: @merchant.id)
   end
 
   it 'returns all items for a merchant' do
+    create_list(:item, 5, merchant_id: @merchant.id)
+
     get "/api/v1/merchants/#{@merchant.id}/items"
 
     expect(response).to be_successful
@@ -34,5 +35,21 @@ describe "Merchants Items API" do
       expect(item[:attributes]).to have_key(:merchant_id)
       expect(item[:attributes][:merchant_id]).to eq(@merchant.id)
     end
+  end
+
+  it 'returns 404 if merchant does not exist' do
+    get "/api/v1/merchants/2134125363457439999999999999/items"
+
+    expect(status).to eq(404)
+  end
+  
+  it 'returns an empty array if merchant has no items' do
+    create_list(:item, 0, merchant_id: @merchant.id)
+    get "/api/v1/merchants/#{@merchant.id}/items"
+    
+    expect(response).to be_successful
+    
+    items = JSON.parse(response.body, symbolize_names: true)[:data]
+    expect(items).to eq([])
   end
 end

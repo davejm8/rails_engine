@@ -45,4 +45,10 @@ describe "Merchants API" do
     expect(merchant[:attributes]).to have_key(:name)
     expect(merchant[:attributes][:name]).to be_a(String)
   end
+
+  it 'returns 404 if merchant not found' do
+    get "/api/v1/merchants/95234985762934875"
+
+    expect(response.status).to eq(404)
+  end
 end
