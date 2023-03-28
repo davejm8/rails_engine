@@ -4,4 +4,8 @@ class Merchant < ApplicationRecord
   has_many :invoices, through: :invoice_items
   has_many :customers, through: :invoices
   has_many :transactions, through: :invoices
+
+  def self.search(params)
+    where('name ILIKE ?', "%#{params}%").first
+  end
 end

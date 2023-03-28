@@ -8,4 +8,14 @@ describe Merchant do
     it { should have_many(:customers).through(:invoices) }
     it { should have_many(:transactions).through(:invoices) }
   end
+
+  describe 'class methods' do
+    describe '#search' do
+      it 'can find a merchant by name' do
+        merchant = create(:merchant, name: 'Bobbert')
+
+        expect(Merchant.search('bo')).to eq(merchant)
+      end
+    end
+  end
 end
