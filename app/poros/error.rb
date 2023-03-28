@@ -1,3 +1,0 @@
-class ApiErrors < StandardError
-  
-end

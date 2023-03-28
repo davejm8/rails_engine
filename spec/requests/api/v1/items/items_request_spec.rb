@@ -126,13 +126,24 @@ describe "Items API" do
       id = previous_item.id
       update_params = { description: 'Updated Description' }
       headers = { 'CONTENT_TYPE' => 'application/json' }
-      
+
       patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate(item: update_params)
       item = Item.find_by(id: id)
 
       expect(item.description).to_not eq(previous_item.description)
       expect(item.description).to eq('Updated Description')
       expect(item.merchant_id).to_not eq(@merchant2.id)
+    end
+  end
+
+  describe 'destroy' do
+    it 'removes an item' do
+      item = create(:item, merchant_id: @merchant.id)
+
+      delete "/api/v1/items/#{item.id}"
+
+      expect(response).to be_successful
+      expect { Item.find(item.id) }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end
