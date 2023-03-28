@@ -11,7 +11,7 @@ describe 'merchant search' do
 
   describe 'search' do
     it 'can find a merchant by name' do
-      get '/api/v1/merchants/find?name=bobbert'
+      get '/api/v1/merchants/search?name=bobbert'
 
       expect(response).to be_successful
 
@@ -24,7 +24,7 @@ describe 'merchant search' do
     end
 
     it 'can find a merchant with a partial entry' do
-      get '/api/v1/merchants/find?name=da'
+      get '/api/v1/merchants/search?name=da'
 
       expect(response).to be_successful
 
