@@ -36,6 +36,12 @@ describe "Merchants Items API" do
       expect(item[:attributes][:merchant_id]).to eq(@merchant.id)
     end
   end
+
+  it 'returns 404 if merchant does not exist' do
+    get "/api/v1/merchants/2134125363457439999999999999/items"
+
+    expect(status).to eq(404)
+  end
   
   it 'returns an empty array if merchant has no items' do
     create_list(:item, 0, merchant_id: @merchant.id)

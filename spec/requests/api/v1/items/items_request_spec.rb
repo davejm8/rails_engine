@@ -9,14 +9,6 @@ describe "Items API" do
     @item3 = create(:item, merchant: @merchant)
     @item4 = create(:item, merchant: @merchant)
     @item5 = create(:item, merchant: @merchant)
-    # require 'pry'; binding.pry
-    # @invoice1 = create(:invoice, merchant: @merchant)
-    # @invoice2 = create(:invoice, merchant: @merchant)
-    # @invoice_item1 = create(:invoice_item, invoice: @invoice1, item: @item1)
-    # @invoice_item2 = create(:invoice_item, invoice: @invoice1, item: @item2)
-    # @invoice_item3 = create(:invoice_item, invoice: @invoice2, item: @item3)
-    # @invoice_item4 = create(:invoice_item, invoice: @invoice2, item: @item4)
-    # @invoice_item5 = create(:invoice_item, invoice: @invoice2, item: @item5)
   end
 
   it 'sends a list of all items' do
@@ -72,11 +64,11 @@ describe "Items API" do
     expect(item[:attributes][:unit_price]).to be_a(Float)
   end
 
-  # it 'returns status 404 if item is not found' do
-  #   get '/api/v1/items/999999999'
+  it 'returns status 404 if item is not found' do
+    get '/api/v1/items/999999999'
 
-  #   expect(status).to eq 404
-  # end
+    expect(status).to eq 404
+  end
 
   describe 'create' do
     it 'can create a new item' do
@@ -99,6 +91,20 @@ describe "Items API" do
       expect(item[:attributes][:description]).to eq("washes you")
       expect(item[:attributes][:unit_price]).to eq(2.5)
       expect(item[:attributes][:merchant_id]).to eq(@merchant.id)
+    end
+
+    it 'wont create a new item if missing a required field' do
+      item_params = ({
+                    description: 'washes you',
+                    unit_price: 2.5,
+                    merchant_id: @merchant.id
+                  })
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+      expect(response).to_not be_successful
+      expect(status).to be(422)
     end
   end
 
@@ -144,6 +150,12 @@ describe "Items API" do
 
       expect(response).to be_successful
       expect { Item.find(item.id) }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it 'returns a 404 if the item does not exist' do
+      delete "/api/v1/items/999999999"
+
+      expect(status).to eq(404)
     end
   end
 end
