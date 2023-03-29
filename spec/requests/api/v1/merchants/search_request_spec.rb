@@ -32,5 +32,15 @@ describe 'merchant search' do
 
       expect(merchant[:id]).to eq("#{@merchant3.id}")
     end
+
+    # it 'can return empty hash if no match' do
+    #   get '/api/v1/merchants/search?name=nomatch'
+
+    #   expect(response).to be_successful
+
+    #   empty_hash = JSON.parse(response.body, symbolize_names: true)
+
+    #   expect(empty_hash).to eq({})
+    # end
   end
 end
