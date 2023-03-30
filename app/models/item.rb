@@ -11,7 +11,16 @@ class Item < ApplicationRecord
     where("name ILIKE ?", "%#{params}%").order(:name)
   end
 
-  def self.search_by_price(params)
-    where("unit_price >= ?", "#{params[:min_price]}").where("unit_price <= ?", "#{params[:max_price]}").order(:unit_price)
-  end
+  def self.search_by_price(min, max)
+		if min != nil && max != nil
+			where("unit_price >= ? AND unit_price <= ?", min, max)
+			
+		elsif max == nil
+			where("unit_price >= ?", min)
+			
+		else min == nil
+			where("unit_price <= ?", max)
+		end
+		.order(:unit_price)
+	end
 end

@@ -35,7 +35,7 @@ RSpec.describe Item, type: :model do
         item4 = create(:item, unit_price: 80.00, merchant: merchant)
         item5 = create(:item, unit_price: 120.00, merchant: merchant)
         
-        expect(Item.search_by_price(min_price: 50, max_price: 80)).to eq([item1, item2, item3, item4])
+        expect(Item.search_by_price(50, 80)).to eq([item1, item2, item3, item4])
       end
     end
   end

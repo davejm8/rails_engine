@@ -10,8 +10,4 @@ class ApplicationController < ActionController::API
   def not_found_response(exception)
     render json: { error: "#{exception.message} not found" }, status: :not_found
   end
-
-  def bad_request(exception)
-    render json: { error: "#{exception.message} not found" }, status: :bad_request
-  end
 end
