@@ -140,6 +140,26 @@ describe "Items API" do
       expect(item.description).to eq('Updated Description')
       expect(item.merchant_id).to_not eq(@merchant2.id)
     end
+
+    it 'returns a 404 if the item does not exist' do
+      update_params = { name: 'Updated Name' }
+      headers = { 'CONTENT_TYPE' => 'application/json' }
+
+      patch "/api/v1/items/999999999", headers: headers, params: JSON.generate(item: update_params)
+
+      expect(status).to eq(404)
+    end
+
+    it 'returns 422 when bad merchant id is given' do
+      item = Item.first
+      update_params = { name: 'test item name', merchant_id: 999999999 }
+
+      headers = { 'CONTENT_TYPE' => 'application/json' }
+
+      patch "/api/v1/items/#{item.id}", headers: headers, params: JSON.generate(item: update_params)
+
+      expect(status).to eq(422)
+    end
   end
 
   describe 'destroy' do
