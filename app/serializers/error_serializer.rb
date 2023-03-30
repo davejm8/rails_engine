@@ -2,7 +2,7 @@ class ErrorSerializer
   def self.no_matches_found(error)
     {
       "data": {
-				"errors": error
+				"error": error
 			}
     }
   end
@@ -10,7 +10,7 @@ class ErrorSerializer
   def self.invalid_parameters(error) 
     {
       "data": {
-				"errors": error
+				"error": error
 			}
     }
   end

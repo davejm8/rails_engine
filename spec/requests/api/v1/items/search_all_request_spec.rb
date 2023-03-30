@@ -27,12 +27,19 @@ describe 'item search_all' do
 
     it 'returns empty array if no items match' do
       get '/api/v1/items/search_all?name=x'
-
+      
       expect(response).to be_successful
 
       items = JSON.parse(response.body, symbolize_names: true)[:data]
-      
+    
       expect(items).to eq([])
+    end
+
+    it 'returns error if no name is sent' do
+      get '/api/v1/items/search_all?name='
+      items = JSON.parse(response.body, symbolize_names: true)[:data]
+  
+      expect(status).to eq(404)
     end
   end
 
@@ -81,6 +88,39 @@ describe 'item search_all' do
 
     it 'returns an error if a name and price are given' do
       get '/api/v1/items/search_all?name=s&min_price=50'
+
+      expect(status).to eq(400)
+    end
+
+    it 'returns an error if a name and price are given' do
+      get '/api/v1/items/search_all?name=s&min_price=50'
+
+      data = JSON.parse(response.body, symbolize_names: true)[:data]
+      
+      expect(data[:error]).to eq("Can not send price with name")
+      expect(status).to eq(400)
+    end
+
+    it 'returns empty array if no items match' do
+      get '/api/v1/items/search_all?min_price=500'
+
+      data = JSON.parse(response.body, symbolize_names: true)[:data]
+
+      expect(status).to eq(400)
+      expect(data[:error]).to eq("No matches found")
+    end
+
+    it 'price can not be 0 or negative' do
+      get '/api/v1/items/search_all?min_price=-1'
+
+      data = JSON.parse(response.body, symbolize_names: true)[:data]
+      
+      expect(status).to eq(400)
+      expect(data[:error]).to eq("Price can not be under 0")
+    end
+
+    it 'returns error if no price is sent' do
+      get '/api/v1/items/search_all?min_price=200&max_price=250'
 
       expect(status).to eq(400)
     end
