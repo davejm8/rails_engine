@@ -12,7 +12,7 @@ describe 'item search_all' do
 
   describe 'search_all' do
     it 'can search all items by name' do
-      get '/api/v1/items/search_all?name=s'
+      get '/api/v1/items/find_all?name=s'
 
       expect(response).to be_successful
 
@@ -26,7 +26,7 @@ describe 'item search_all' do
     end
 
     it 'returns empty array if no items match' do
-      get '/api/v1/items/search_all?name=x'
+      get '/api/v1/items/find_all?name=x'
       
       expect(response).to be_successful
 
@@ -36,7 +36,7 @@ describe 'item search_all' do
     end
 
     it 'returns error if no name is sent' do
-      get '/api/v1/items/search_all?name='
+      get '/api/v1/items/find_all?name='
       items = JSON.parse(response.body, symbolize_names: true)[:data]
   
       expect(status).to eq(404)
@@ -45,7 +45,7 @@ describe 'item search_all' do
 
   describe 'search_by_price' do
     it 'can find all items by min price' do
-      get '/api/v1/items/search_all?min_price=50'
+      get '/api/v1/items/find_all?min_price=50'
 
       expect(response).to be_successful
 
@@ -60,7 +60,7 @@ describe 'item search_all' do
     end
 
     it 'can find all items by max price' do
-      get '/api/v1/items/search_all?max_price=70'
+      get '/api/v1/items/find_all?max_price=70'
 
       expect(response).to be_successful
 
@@ -74,7 +74,7 @@ describe 'item search_all' do
     end
 
     it 'can find all items by min and max price' do
-      get '/api/v1/items/search_all?min_price=50&max_price=70'
+      get '/api/v1/items/find_all?min_price=50&max_price=70'
 
       expect(response).to be_successful
 
@@ -87,13 +87,13 @@ describe 'item search_all' do
     end
 
     it 'returns an error if a name and price are given' do
-      get '/api/v1/items/search_all?name=s&min_price=50'
+      get '/api/v1/items/find_all?name=s&min_price=50'
 
       expect(status).to eq(400)
     end
 
     it 'returns an error if a name and price are given' do
-      get '/api/v1/items/search_all?name=s&min_price=50'
+      get '/api/v1/items/find_all?name=s&min_price=50'
 
       data = JSON.parse(response.body, symbolize_names: true)[:data]
       
@@ -102,7 +102,7 @@ describe 'item search_all' do
     end
 
     it 'returns empty array if no items match' do
-      get '/api/v1/items/search_all?min_price=500'
+      get '/api/v1/items/find_all?min_price=500'
 
       data = JSON.parse(response.body, symbolize_names: true)[:data]
 
@@ -111,7 +111,7 @@ describe 'item search_all' do
     end
 
     it 'price can not be 0 or negative' do
-      get '/api/v1/items/search_all?min_price=-1'
+      get '/api/v1/items/find_all?min_price=-1'
 
       data = JSON.parse(response.body, symbolize_names: true)[:data]
       
@@ -120,7 +120,7 @@ describe 'item search_all' do
     end
 
     it 'returns error if no price is sent' do
-      get '/api/v1/items/search_all?min_price=200&max_price=250'
+      get '/api/v1/items/find_all?min_price=200&max_price=250'
 
       expect(status).to eq(400)
     end
