@@ -11,7 +11,7 @@ describe 'merchant search' do
 
   describe 'search' do
     it 'can find a merchant by name' do
-      get '/api/v1/merchants/search?name=bobbert'
+      get '/api/v1/merchants/find?name=bobbert'
 
       expect(response).to be_successful
 
@@ -24,7 +24,7 @@ describe 'merchant search' do
     end
 
     it 'can find a merchant with a partial entry' do
-      get '/api/v1/merchants/search?name=da'
+      get '/api/v1/merchants/find?name=da'
 
       expect(response).to be_successful
 
@@ -34,7 +34,7 @@ describe 'merchant search' do
     end
 
     it 'can return empty hash if no match' do
-      get '/api/v1/merchants/search?name=asdgasdfgas'
+      get '/api/v1/merchants/find?name=asdgasdfgas'
       #not passing postman
 
       expect(response).to be_successful
@@ -45,7 +45,7 @@ describe 'merchant search' do
     end
 
     it 'returns a 400 error when no name param is passed' do
-      get '/api/v1/merchants/search?name='
+      get '/api/v1/merchants/find?name='
   
       expect(response.status).to eq(400)
 
